@@ -1,0 +1,61 @@
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore the virtual environment
+venv/
+env/
+
+# Ignore local development settings
+*.env
+
+# Ignore log files
+*.log
+
+# Ignore database files
+*.sqlite
+*.db
+
+# Ignore generated files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore the local development database
+db.sqlite3
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+
+# Ignore pycache, bytecode, and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore the dist directory
+dist/
+
+# Ignore the build directory
+build/
+
+# Ignore egg-info
+*.egg-info/
+
+# Ignore pipenv
+Pipfile.lock
+
+# Ignore .pyc files, which are compiled Python files
+*.pyc
+
+# Ignore __pycache__ directories
+__pycache__/
+
+# Ignore .DS_Store files on macOS
+.DS_Store
