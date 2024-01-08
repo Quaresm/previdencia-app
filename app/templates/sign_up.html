@@ -1,0 +1,62 @@
+{% extends "layout/background.html" %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="static/sign_up.css">
+    
+{% endblock %}
+{% block content %}
+<body>
+
+    <div class="register-container">
+        <div class="register-box">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {%if messages %}
+                {% for category, message in messages %}
+                {% if category =='error'%}
+                <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% else%}
+                <div class="alert alert-success alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif%}
+                {% endfor %}
+            {% endif%}
+            {% endwith %}
+            <h2>Cadastro</h2>
+            <form method="POST">
+                <div class="input-group">
+                    <label for="name">Usuário:</label>
+                    <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm-password">Confirmar Senha:</label>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirme sua senha" required>
+                </div>
+
+                <button type="submit">Cadastrar</button>
+            </form>
+            <p>Já tem uma conta? <a href="/login">Faça login</a></p>
+        </div>
+    </div>
+
+</body>
+{% endblock %}

@@ -1,0 +1,57 @@
+.register-container {
+    position: relative; /* Adicionado para servir como referência para o posicionamento absoluto do fundo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.register-box {
+    position: relative; /* Adicionado para servir como referência para o posicionamento absoluto do fundo */
+    z-index: 1; /* Certifica-se de que o formulário apareça acima do fundo */
+    width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.register-box h2{
+    text-align: center;
+}
+
+.register-box h2 {
+    margin-bottom: 20px;
+}
+
+.register-box form {
+    width: 100%;
+}
+
+.register-box input {
+    margin-bottom: 10px;
+}
+
+.register-box button {
+    margin-top: 10px;
+}
+/* Adicione este estilo para garantir que as mensagens flash não sejam transparentes */
+.alert {
+    opacity: 1 !important;
+}
+
+/* Estilo específico para a mensagem de sucesso */
+.alert-success {
+    background: #28a745; /* Cor de fundo para mensagens de sucesso */
+    color: #fff; /* Cor do texto para mensagens de sucesso */
+}
+
+/* Estilo específico para a mensagem de erro */
+.alert-danger {
+    background: #dc3545; /* Cor de fundo para mensagens de erro */
+    color: #fff; /* Cor do texto para mensagens de erro */
+}
+
+.alert {
+    margin-bottom: 10px;
+}

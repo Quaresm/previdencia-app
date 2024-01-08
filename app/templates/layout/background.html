@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/background.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <title>{% block title %}Previdencia{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    <h1 class="previdencia-text">
+        <span>Simule</span><i class="fa fa-money"></i><br> 
+        <span>sua</span> 
+        <span>Previdência</span>
+    </h1>
+    {% block content %}
+    {% endblock %}
+    
+    <!-- Marca d'água no rodapé -->
+    <div class="footer-watermark">
+        <a href="https://br.freepik.com/vetores-gratis/ilustracao-do-conceito-de-plano-de-pensao_58596889.htm#query=background%20aposentadoria&position=1&from_view=search&track=ais&uuid=c05d1322-a1e4-4135-809b-54e9fbac29bf">Imagem de storyset</a> no Freepik
+    </div>
+
+    <!-- Sua imagem de fundo como marca d'água -->
+    <div class="background-logo"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

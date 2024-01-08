@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'Quicksand';
+    src: url('https://fonts.gstatic.com/s/quicksand/v26/6xK-dSZaM9iE8KbpRA_LJ3z8mH9BOJvgkP9ybR2Q.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    /* Outros estilos para o corpo da página */
+}
+
+.background-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: 50%;
+    opacity: 0.5; 
+    z-index: 0; 
+}
+.footer-watermark {
+    position: absolute;
+    bottom: 0;
+    left: 50%; /* Ajuste a posição conforme necessário */
+    transform: translateX(-50%); /* Centralizar horizontalmente */
+    opacity: 0.5; /* Ajuste a opacidade conforme necessário */
+}
+
+.previdencia-text {
+    position: absolute;
+    top: 50%;
+    left: 20px; /* Ajuste a posição à esquerda conforme necessário */
+    transform: translateY(-50%);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 50px;
+    color: #9bacb1;
+    z-index: 1;
+}
+
+.previdencia-text span {
+    display: inline-block;
+}
+
+.fa-money {
+    margin-left: 60px; /* ou qualquer valor que você preferir */
+}
+
+.footer-watermark {
+    position: absolute;
+    bottom: 0;
+    left: 50%; /* Ajuste a posição conforme necessário */
+    transform: translateX(-50%); /* Centralizar horizontalmente */
+    opacity: 0.5; /* Ajuste a opacidade conforme necessário */
+}
