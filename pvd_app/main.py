@@ -1,4 +1,5 @@
-from pvd_app import create_app
+# -*- coding: utf-8 -*-
+from . import create_app
 
 app = create_app()
 
