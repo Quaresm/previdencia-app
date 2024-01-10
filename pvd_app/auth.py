@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, flash, redirect
+from flask import Blueprint, render_template, request, flash, redirect, session
 from flask_login import current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import Users
@@ -18,11 +18,15 @@ def login():
 
         user = users.get_user(email)
 
-        print (user)
+        user = users.get_user(email)
+        print(f"Email: {email}, User: {user}")
 
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
+                session['user_id'] = user.id
+                session['username'] = user.usernane
+                session['email'] = user.email
                 return redirect('/home')
             else:
                 flash('Senha incorreta, tente novamente.', category='error')
@@ -37,7 +41,7 @@ def is_valid_email(email):
 
 def is_valid_password(password):
     # Verifica se a senha atende aos critérios: pelo menos 1 letra maiúscula, 1 letra minúscula, 1 número, 1 caractere especial e menos de 12 caracteres
-    return any(c.isupper() for c in password) and any(c.islower() for c in password) and any(c.isdigit() for c in password) and any(c.isascii() and not c.isalnum() for c in password) and len(password) < 12
+    return any(c.isupper() for c in password) and any(c.islower() for c in password) and any(c.isdigit() for c in password) and any(c.isascii() and not c.isalnum() for c in password) and len(password) <= 12
 
 
 @auth.route('/sign-up', methods=['GET','POST'])
@@ -55,23 +59,21 @@ def sign_up():
 
         if len(email) > 255 or not is_valid_email(email):
             flash('Email inválido. Certifique-se de que seja válido e não pode haver mais de 255 caracteres.', category='error')
-        elif not (8 <= len(username) <= 10):
+        elif not (6 <= len(username) <= 10):
             flash('O Usuário precisa ter no mínimo 8 caracteres ou exatamente 10 caracteres', category='error')
         elif password != confirm_password:
             flash('As senhas precisam ser iguais', category='error')
+        elif len(password) < 6:
+            print("A senha é muito curta", category='error')
         elif len(password) > 12:
             flash('A senha precisa ter até 12 caracteres', category='error')
         elif not is_valid_password(password):
             flash('A senha deve conter pelo menos letra maiúscula, letra minúscula, número, caractere especial e ser menor que 12 caracteres.', category='error')
         else:  
             hashed_password = generate_password_hash(password)
-            print(username, email, hashed_password)
             register_user = users.register_user(username, email, hashed_password)
-            
-            print(register_user)
-            print(hashed_password)
-            
-            return "SucessfullRegisterUser", redirect('/login')
+            flash('Usuário registrado com sucesso!', category='success')
+            return redirect('/login')
     return render_template("sign_up.html")
 
 @auth.route('/logout')

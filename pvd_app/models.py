@@ -9,7 +9,7 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150))
     email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(155))
+    password = db.Column(db.String(170))
 
     def register_user(self, username, email, password):
         user = Users.query.filter_by(email=email).first()

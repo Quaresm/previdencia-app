@@ -1,0 +1,39 @@
+.container {
+    display: block;
+    height: 80vh;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.title {
+    color: #62E3D7;
+    padding-top: 10vh;
+    padding-bottom: 20vh;
+    animation: fadeIn 1.5s;
+}
+
+.textt-left {
+    color: #6273E3;
+    animation: fadeIn 1.5s;
+}
+
+.textt-right {
+    color:#629CE3;
+    animation: fadeIn 1.5s;
+}
+
+.btn{
+    border-radius: 40%;
+    background: #7A62E3;
+    color: #FFFF;
+    font-size: 35px;
+    animation: fadeIn 1.5s;
+}
+
+.btn:hover {
+    background-color: #9BACB1;
+    color:black;
+}

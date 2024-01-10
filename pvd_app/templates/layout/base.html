@@ -8,21 +8,38 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
         crossorigin="anonymous" />
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="static/styles.css">
     <title>{% block title %}Previdencia{% endblock %}</title>
     {% block stylesheets %}{% endblock stylesheets %}
 </head>
 
 <body>
     <header class="header">
-        
-        <a href="/" class="logo">Logo</a>
-
+        <a href="/home" class="logo">Logo</a>
         <nav class="navbar">
-            <a href="/">Home</a>
-            <a href="/login">Login</a>
-            <a href="/sign-up">Cadastrar-se</a>
-            <a href="logout">Sair</a>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {%if messages %}
+                {% for category, message in messages %}
+                {% if category =='error'%}
+                <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% else%}
+                <div class="alert alert-success alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif%}
+                {% endfor %}
+                {% endif%}
+            {% endwith %}
+            <a href="/config">Configuração</a>
+            <a href="/logout">Sair</a>
         </nav>
     </header>
 
@@ -31,6 +48,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     {% block javascript %}
+    
+    <div class="image-background"></div>
+    <div class="footer-watermark-1">
+        <a href="https://br.freepik.com/vetores-gratis/ilustracao-do-conceito-de-cofrinho_13283988.htm#query=save%20money&position=1&from_view=search&track=ais&uuid=5c6df0e8-1c14-4620-9485-120aaad594f2">Imagem de storyset</a> no Freepik
+    </div>
+
+    <div class="image-background-2"></div>
+    <div class="footer-watermark-2">
+        <a href="https://br.freepik.com/vetores-gratis/casal-da-familia-economizando-dinheiro_7732613.htm#query=save%20money&position=26&from_view=search&track=ais&uuid=e0869777-1db8-4cca-807c-dfad214215c4">Imagem de pch.vector</a> no Freepik
+    </div>
+
     
     <script type="text/javascript">
         function deleteNote(noteId) {

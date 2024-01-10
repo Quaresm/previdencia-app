@@ -1,12 +1,14 @@
 {% extends "layout/base.html" %} 
 {% block stylesheets %}
-<link rel="stylesheet" href="static/home.css">
+<link rel="stylesheet" href="static/config.css">
 {% endblock stylesheets %}
 {% block content %}
 <section class="container">
-    <div class="row">
-        <h1 class="col title" >Venha simular sua previdência</h1>
-    </div>
+    <label>Usuário</label>
+    <input type="text" class="input_default" value="{{user.username}}">
+    <label>Email</label>
+    <input type="text" class="input_default" value="{{user.email}}">
+    <button type="button" class="btn">Resetar senha</button>
     <div class="row">
         <h2 class="col textt-left">Aqui você simula  como <br>irá ser seu futuro<br><i class="fa fa-gift" aria-hidden="true"></i> </h2>
         <button type="button" class="col btn">SIMULE JÁ</button>

@@ -47,11 +47,3 @@ body {
 .fa-money {
     margin-left: 60px; /* ou qualquer valor que você preferir */
 }
-
-.footer-watermark {
-    position: absolute;
-    bottom: 0;
-    left: 50%; /* Ajuste a posição conforme necessário */
-    transform: translateX(-50%); /* Centralizar horizontalmente */
-    opacity: 0.5; /* Ajuste a opacidade conforme necessário */
-}

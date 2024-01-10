@@ -9,8 +9,8 @@
 
 body {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
 .header {
@@ -27,11 +27,13 @@ body {
 }
 
 .container-body {
+    display: flex;
     margin-left: 50px;
     margin-right: 50px;
+    margin-top: 10vh;
     width: 100%;
     height: 100%;
-    padding: 35vh;
+    text-align: center;
 }
 
 .logo {
@@ -117,4 +119,80 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.alert {
+    position: fixed;
+    top: 80px; /* Adjust as needed */
+    left: 48%;
+    transform: translateX(-50%);
+    max-width: 500px; /* Adjust as needed */
+    z-index: 999;
+    margin: 0 auto; /* Ensure alerts appear above other content */
+}
+
+/* Estilo específico para a mensagem de sucesso */
+.alert-success {
+    background: #28a745; /* Cor de fundo para mensagens de sucesso */
+    color: #fff; /* Cor do texto para mensagens de sucesso */
+}
+
+/* Estilo específico para a mensagem de erro */
+.alert-danger {
+    background: #dc3545; /* Cor de fundo para mensagens de erro */
+    color: #fff; /* Cor do texto para mensagens de erro */
+}
+
+.close{
+    margin-left: 10px;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.footer-watermark-1 {
+    position: absolute;
+    right: 1%;
+    bottom: 0; /* Ajuste a posição conforme necessário */
+    transform: translateX(-50%); /* Centralizar horizontalmente */
+    opacity: 0.5;
+    animation: fadeIn 3s;/* Ajuste a opacidade conforme necessário */
+}
+
+
+.image-background {
+    position: absolute;
+    bottom: 0; /* Position at the bottom */
+    right: 0; /* Position to the right */
+    width: 30%; /* Adjust width as desired */
+    height: 30%; /* Adjust height as desired */
+    background: url('image-home.jpg') no-repeat center center; /* Remove 'fixed' */
+    background-size: contain;
+    opacity: 0.9;
+    z-index: 0;
+    animation: fadeIn 3s;
+}
+
+.footer-watermark-2 {
+    position: absolute;
+    left: 14%;
+    bottom: 0; /* Ajuste a posição conforme necessário */
+    transform: translateX(-50%); /* Centralizar horizontalmente */
+    opacity: 0.5;
+    animation: fadeIn 3s; /* Ajuste a opacidade conforme necessário */
+}
+
+.image-background-2 {
+    position: absolute;
+    bottom: 0; /* Position at the bottom */
+    left: 0; /* Position to the right */
+    width: 30%; /* Adjust width as desired */
+    height: 30%; /* Adjust height as desired */
+    background: url('image-home-2.jpg') no-repeat center center; /* Remove 'fixed' */
+    background-size: contain;
+    opacity: 0.9;
+    z-index: 0;
+    animation: fadeIn 3s;
 }
