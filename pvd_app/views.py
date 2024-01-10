@@ -7,10 +7,11 @@ views = Blueprint('views', __name__)
 @views.route('/home')
 @login_required
 def home():
-    return render_template("home.html")
+    return render_template("home.html", user=current_user)
 
 @views.route('/config')
 @login_required
 def config():
     flash('Testesssssssssss', category='error')
-    return render_template("config.html")
+    print(current_user)
+    return render_template("config.html", user=current_user)

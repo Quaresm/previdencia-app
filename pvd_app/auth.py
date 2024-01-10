@@ -24,10 +24,11 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
+                print(current_user)
                 session['user_id'] = user.id
                 session['username'] = user.usernane
                 session['email'] = user.email
-                return redirect('/home')
+                return redirect('/home', user=current_user)
             else:
                 flash('Senha incorreta, tente novamente.', category='error')
         else:
