@@ -1,8 +1,8 @@
-"""upping user table
+"""init db in pc stone
 
-Revision ID: bcc2de76d3f5
-Revises: fd3ea9a8814f
-Create Date: 2024-01-09 15:38:32.878697
+Revision ID: 25968cd895a4
+Revises: 
+Create Date: 2024-01-10 17:19:53.238881
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bcc2de76d3f5'
-down_revision = 'fd3ea9a8814f'
+revision = '25968cd895a4'
+down_revision = None
 branch_labels = None
 depends_on = None
 

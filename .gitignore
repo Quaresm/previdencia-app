@@ -65,3 +65,8 @@ pyvenv.cfg
 Include/
 Lib/
 Scripts/
+
+# Ignore Alembic migration files
+migrations/alembic.ini
+migrations/env.py
+migrations/script.py.mako

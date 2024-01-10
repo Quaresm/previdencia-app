@@ -24,3 +24,19 @@ body {
 .login-box h2{
     text-align: center;
 }
+
+.alert-login {
+    padding-top: 3px;
+    justify-content: center;
+    text-align: center;
+    opacity: 1 !important;
+    /* Adicionando posicionamento absoluto em relação ao contêiner do formulário */
+    position: absolute;
+    top: 0;
+    height: 17%;
+    right: 10%;
+    width: 70%;
+    /* Ajustando margens conforme necessário */
+    margin-top: -20px; /* Ajuste conforme necessário */
+    margin-bottom: 20px; /* Ajuste conforme necessário */
+}

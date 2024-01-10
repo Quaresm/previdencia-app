@@ -9,6 +9,9 @@ import os
 auth = Blueprint('auth', __name__)
 users = Users()
 
+@auth.route('/')
+def first_login():
+    return render_template('login.html')
 @auth.route('/login', methods=['GET','POST'])
 def login():
     
@@ -25,10 +28,7 @@ def login():
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
                 print(current_user)
-                session['user_id'] = user.id
-                session['username'] = user.usernane
-                session['email'] = user.email
-                return redirect('/home', user=current_user)
+                return redirect('/home')
             else:
                 flash('Senha incorreta, tente novamente.', category='error')
         else:
@@ -55,17 +55,17 @@ def sign_up():
         
         user = users.get_user(email)
 
-        if user:
+        if user != None:
             flash('Email já existe.', category='error')
 
-        if len(email) > 255 or not is_valid_email(email):
+        elif len(email) > 255 or not is_valid_email(email):
             flash('Email inválido. Certifique-se de que seja válido e não pode haver mais de 255 caracteres.', category='error')
         elif not (6 <= len(username) <= 10):
             flash('O Usuário precisa ter no mínimo 8 caracteres ou exatamente 10 caracteres', category='error')
         elif password != confirm_password:
             flash('As senhas precisam ser iguais', category='error')
         elif len(password) < 6:
-            print("A senha é muito curta", category='error')
+            flash("A senha é muito curta", category='error')
         elif len(password) > 12:
             flash('A senha precisa ter até 12 caracteres', category='error')
         elif not is_valid_password(password):

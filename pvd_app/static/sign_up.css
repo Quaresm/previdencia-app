@@ -14,6 +14,10 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    @media (max-width: 768px) {
+        width: 100%;
+        /* Ajustes para telas menores */
+    }
 }
 
 .register-box h2{
@@ -38,6 +42,14 @@
 /* Adicione este estilo para garantir que as mensagens flash não sejam transparentes */
 .alert {
     opacity: 1 !important;
+    /* Adicionando posicionamento absoluto em relação ao contêiner do formulário */
+    position: absolute;
+    top: 0;
+    right: 10%;
+    width: 70%;
+    /* Ajustando margens conforme necessário */
+    margin-top: -20px; /* Ajuste conforme necessário */
+    margin-bottom: 20px; /* Ajuste conforme necessário */
 }
 
 /* Estilo específico para a mensagem de sucesso */
@@ -50,8 +62,4 @@
 .alert-danger {
     background: #dc3545; /* Cor de fundo para mensagens de erro */
     color: #fff; /* Cor do texto para mensagens de erro */
-}
-
-.alert {
-    margin-bottom: 10px;
 }
