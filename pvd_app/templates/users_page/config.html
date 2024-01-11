@@ -1,0 +1,30 @@
+{% extends "layout/base.html" %} 
+{% block stylesheets %}
+<link rel="stylesheet" href="static/config.css">
+{% endblock stylesheets %}
+{% block content %}
+<section class="container">
+    <div class="config-box">
+        <form method="POST">
+            <div class="input-group">
+                <label for="name">Usuário:</label>
+                <input type="text" id="username" name="username" value="{{user.username}}" required>
+            </div>
+
+            <div class="input-group">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" value="{{user.email}}" required>
+            </div>
+
+            <div class="row">
+                <label class="col"for="password">Deseja resetar sua senha?</label>
+            </div>
+            <div class="row">
+                <a href="/reset_password" class="col"><button type="button" class="btn" >Resetar senha</button></a>
+            </div>
+
+            <button class='submit'type="submit">Salvar</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

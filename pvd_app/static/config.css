@@ -1,0 +1,57 @@
+.container{
+    display: block;
+    justify-content: center;
+}
+
+.config-box {
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 50px; 
+}
+
+.config-box h2{
+    text-align: center;
+}
+
+.config-box h2 {
+    margin-bottom: 20px;
+}
+
+.config-box form {
+    width: 100%;
+}
+
+.config-box input {
+    margin-bottom: 10px;
+}
+
+.config-box button {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.btn {
+    background: #62E3D7;
+    color: #FFFF;
+    font-size: 18px;
+}
+.btn:hover {
+    background-color: #6273E3;
+    color:#FFFF;
+}
+.submit {
+    font-size: 22px;
+    background: #9BACB1;
+}
+.submit:hover{
+    background: #629CE3;
+}
+.row{
+    justify-content: center;
+}
+.col {
+    max-width: 400px;
+}

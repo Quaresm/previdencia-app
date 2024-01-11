@@ -11,7 +11,7 @@ users = Users()
 
 @auth.route('/')
 def first_login():
-    return render_template('login.html')
+    return redirect('/login')
 @auth.route('/login', methods=['GET','POST'])
 def login():
     
@@ -43,7 +43,6 @@ def is_valid_email(email):
 def is_valid_password(password):
     # Verifica se a senha atende aos critérios: pelo menos 1 letra maiúscula, 1 letra minúscula, 1 número, 1 caractere especial e menos de 12 caracteres
     return any(c.isupper() for c in password) and any(c.islower() for c in password) and any(c.isdigit() for c in password) and any(c.isascii() and not c.isalnum() for c in password) and len(password) <= 12
-
 
 @auth.route('/sign-up', methods=['GET','POST'])
 def sign_up():

@@ -47,3 +47,15 @@ body {
 .fa-money {
     margin-left: 60px; /* ou qualquer valor que você preferir */
 }
+
+
+.alert-success {
+    background: #28a745; /* Cor de fundo para mensagens de sucesso */
+    color: #fff; /* Cor do texto para mensagens de sucesso */
+}
+
+/* Estilo específico para a mensagem de erro */
+.alert-danger {
+    background: #dc3545; /* Cor de fundo para mensagens de erro */
+    color: #fff; /* Cor do texto para mensagens de erro */
+}
