@@ -5,21 +5,31 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from os import path
+from flask_mail import Mail
 import os
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'secret', '.env')
 load_dotenv(dotenv_path)
 
 db = SQLAlchemy()
+mail = Mail()
 
 def create_app():
     app = Flask(__name__)
 
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+
+    app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_USERNAME'] = os.getenv('DEFAULT_EMAIL')
+    app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('DEFAULT_EMAIL')
     
     db.init_app(app)  
     migrate = Migrate(app, db)
+    mail.init_app(app)
 
     from .views import views
     from .auth import auth
