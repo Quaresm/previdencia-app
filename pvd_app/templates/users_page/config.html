@@ -1,6 +1,6 @@
 {% extends "layout/base.html" %} 
 {% block stylesheets %}
-<link rel="stylesheet" href="static/config.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='config.css') }}">
 {% endblock stylesheets %}
 {% block content %}
 <section class="container">

@@ -2,6 +2,7 @@
 from flask_login import UserMixin
 from pvd_app import db
 from sqlalchemy import text
+import secrets
 
 class Users(db.Model, UserMixin):
 
@@ -11,14 +12,15 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(150))
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(170))
+    token = db.Column(db.String(50))
 
-    def register_user(self, username, email, password):
+    def register_user(self, username, email, password, token):
         user = Users.query.filter_by(email=email).first()
 
         if user:
             return 'User has been registred'
         else:
-            new_user = Users(username=username, email=email, password=password)
+            new_user = Users(username=username, email=email, password=password, token=token)
 
             db.session.add(new_user)
             db.session.commit()
@@ -57,3 +59,26 @@ class Users(db.Model, UserMixin):
         return Users.query.order_by(Users.username).all()
     def get_user(self, email):
         return Users.query.filter_by(email=email).first()
+    def get_token(self, email):
+        user = Users.query.filter_by(email=email).first()
+        if user:
+            return user.token
+        return None
+
+    #Functions for a user not authenticated // * //
+    def confirm_token(self, token):
+        return Users.query.filter_by(token=token).first()
+    def get_user_email_by_token(self, token):
+        user_email = Users.query.filter_by(token=token).value(text('email'))
+        return user_email
+    def get_user_pass_by_token(self, token):
+        user_pass = Users.query.filter_by(token=token).value(text('password'))
+        return user_pass
+    # // * //
+    def generate_token(self, email):
+        token = secrets.token_urlsafe(32)
+        user = Users.query.filter_by(email=email).first()
+        if user:
+            user.token = token
+            db.session.commit()
+        return token
