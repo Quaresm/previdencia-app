@@ -11,25 +11,25 @@
         <div class="login-box">
             <h2>Login</h2>
             {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                {% if category =='error'%}
-                <div class="alert-login alert-danger alter-dismissable fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close manual-close" data-dismiss="alert">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% else%}
-                <div class="alert-login alert-success alter-dismissable fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close manual-close" data-dismiss="alert">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category =='error'%}
+                        <div class="alert-login alert-danger alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close manual-close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% else%}
+                        <div class="alert-login alert-success alter-dismissable fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close manual-close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% endif%}
+                    {% endfor %}
                 {% endif%}
-                {% endfor %}
-            {% endif%}
             {% endwith %}
             <form method="POST">
                 <div class="input-group">
@@ -48,7 +48,6 @@
             <p>Esqueceu sua senha? <a href="/reset_password">Clique aqui</a></p>
         </div>
     </div>
-
 
 </body>
 <script>

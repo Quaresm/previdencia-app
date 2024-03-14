@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from os import path
 from flask_mail import Mail
+
 import os
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'secret', '.env')
@@ -31,10 +32,9 @@ def create_app():
     migrate = Migrate(app, db)
     mail.init_app(app)
 
-    from .views import views
-    from .auth import auth
-
-    from .models import Users
+    from pvd_app.structure.models import Users
+    from pvd_app.pages.auth import auth
+    from pvd_app.pages.views import views
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')

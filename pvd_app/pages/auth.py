@@ -2,8 +2,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, session
 from flask_login import current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import Users
-from . import create_app
+from pvd_app.structure.models import Users
+from pvd_app import create_app
 import secrets
 import os
 
@@ -32,7 +32,7 @@ def login():
         else:
             flash('Email não existe.', category='error')
             
-    return render_template('login.html')
+    return render_template('pages/login.html')
 
 def is_valid_email(email):
     # Verifica se o e-mail contém '@' e '.com'
@@ -75,7 +75,7 @@ def sign_up():
                 register_user = users.register_user(username, email, hashed_password, token)
                 flash('Usuário registrado com sucesso!', category='success')
                 return redirect('/login')
-    return render_template("sign_up.html")
+    return render_template("pages/sign_up.html")
 
 @auth.route('/logout')
 @login_required

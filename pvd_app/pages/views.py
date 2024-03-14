@@ -2,13 +2,12 @@
 from flask import Blueprint, render_template, flash, request, redirect, abort
 from flask_login import current_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import Users
 from flask_mail import Message
-from . import mail
+from pvd_app.structure.models import Users
+from pvd_app import mail
 from .auth import is_valid_password, is_valid_email
 import secrets, hashlib
 import urllib.parse
-
 
 views = Blueprint('views', __name__)
 users = Users()
@@ -16,7 +15,7 @@ users = Users()
 @views.route('/home')
 @login_required
 def home():
-    return render_template("home.html", user=current_user)
+    return render_template("pages/home.html", user=current_user)
 
 @views.route('/config',  methods=['GET', 'POST'])
 @login_required
@@ -36,8 +35,8 @@ def config():
             else:
                 flash('Falha ao atualizar o usuário', category='error')
 
-            return render_template("users_page/config.html", user=current_user)
-    return render_template("users_page/config.html", user=current_user)
+            return render_template("user_page/config.html", user=current_user)
+    return render_template("user_page/config.html", user=current_user)
 
 @views.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
@@ -81,7 +80,7 @@ def reset_password():
                     return redirect('/login')
                 else:
                     flash('Falha ao redefinir a senha', category='error')
-    return render_template('users_page/reset_password.html', user=current_user, rota_atual=rota_atual)
+    return render_template('user_page/reset_password.html', user=current_user, rota_atual=rota_atual)
 
 @views.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password_with_token(token):
@@ -118,4 +117,25 @@ def reset_password_with_token(token):
                         return redirect('/login')
                     else:
                         flash('Falha ao redefinir a senha', category='error')
-    return render_template('users_page/reset_password.html',rota_atual=rota_atual, user_email=user_email)
+    return render_template('user_page/reset_password.html',rota_atual=rota_atual, user_email=user_email)
+
+@views.route('/simulate_pvd')
+@login_required
+def pre_simulation():
+    data = [
+        ("01-01-2024", 1234),
+        ("02-01-2024", 1334),
+        ("03-01-2024", 1234),
+        ("04-01-2024", 1434),
+        ("05-01-2024", 1534),
+        ("06-01-2024", 1314),
+
+    ]
+
+    labels = [row[0] for row in data]
+    values = [row[1] for row in data]
+    if labels and values:
+        return render_template('pages/simulate_pvd.html', labels=labels, values=values)
+    else:
+        flash('Dados de simulação não encontrados.', category='error')
+        return redirect('/home')

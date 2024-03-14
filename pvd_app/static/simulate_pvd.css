@@ -1,0 +1,43 @@
+.container {
+    display: block;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.title {
+    color: #62E3D7;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    animation: fadeIn 1.5s;
+}
+
+.btn{
+    border-radius: 20%;
+    background: #7A62E3;
+    color: #FFFF;
+    font-size: 25px;
+    animation: fadeIn 1.5s;
+}
+
+.btn:hover {
+    background-color: #9BACB1;
+    color:black;
+}
+
+.form-control {
+    justify-content: center;
+    border-radius: 10px; /* Adapte conforme necessário */
+    border: 1px solid seagreen; /* Adapte conforme necessário */
+    padding: 10px;
+    width: calc(80% - 20px); /* Metade do tamanho do container menos o padding */
+    margin: 0 auto; /* Alinha os inputs ao centro */
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #7A62E3; /* Adapte conforme necessário */
+    outline: none;
+}

@@ -1,0 +1,78 @@
+{% extends "layout/base.html" %} 
+{% block stylesheets %}
+<link rel="stylesheet" href="static/simulate_pvd.css">
+{% endblock stylesheets %}
+{% block content %}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<section class="container">
+    <div class="row">
+        <h1 class="col title" >Simulação da previdência privada</h1>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form>
+                <div class="form-group">
+                    <label for="idade">Minha idade hoje:</label>
+                    <input type="number" class="form-control" id="idade" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="aplicacao">Aplicação Inicial:</label>
+                    <input type="number" class="form-control" id="aplicacao" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="aportes">Aportes por mês:</label>
+                    <input type="number" class="form-control" id="aportes" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="idade_aposentadoria">Idade em que pretende se aposentar:</label>
+                    <input type="number" class="form-control" id="idade_aposentadoria" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="gasto_mensal">Gasto Mensal após aposentadoria:</label>
+                    <input type="number" class="form-control" id="gasto_mensal" step="1" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">Calcular</button>
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <canvas id="lineChart" width="700" height="480"></canvas>
+        </div>
+    </div>
+</section>
+<script>
+    // Bloquear entrada de números decimais nos campos de entrada
+    var inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\d]/, ''); // Remove qualquer coisa que não seja dígito
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById("lineChart").getContext("2d");
+    var lineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [
+                {
+                    label: "Data points",
+                    data: {{ values | tojson }},
+                    fill: false,
+                    borderColor: "rgb(75, 192, 192)",
+                    lineTension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: false
+        }
+    });
+</script>
+
+{% endblock %}
