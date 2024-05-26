@@ -27,12 +27,27 @@
     color:black;
 }
 
+.btn-choose {
+    border-radius: 20%;
+    background: #7A62E3;
+    color: #FFFF;
+    font-size: 20px;
+    animation: fadeIn 1.5s;
+}
+
+.btn-choose:hover {
+    background-color: seagreen;
+    color:white;
+}
+
 .form-control {
+    text-align: center;
     justify-content: center;
     border-radius: 10px; /* Adapte conforme necessário */
     border: 1px solid seagreen; /* Adapte conforme necessário */
     padding: 10px;
     width: calc(80% - 20px); /* Metade do tamanho do container menos o padding */
+    height: calc(20% - 20px);
     margin: 0 auto; /* Alinha os inputs ao centro */
     transition: border-color 0.3s;
 }
@@ -40,4 +55,9 @@
 .form-control:focus {
     border-color: #7A62E3; /* Adapte conforme necessário */
     outline: none;
+}
+
+.alerta {
+    color: red;
+    font-size: 12px;
 }
