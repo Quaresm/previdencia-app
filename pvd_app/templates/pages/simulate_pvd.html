@@ -15,33 +15,54 @@
             <form>
                 <div class="form-group">
                     <label class="alerta">Os valores financeiros devem ser em reais,<br>não há necessidade de preencher R$</label>
-
                 </div>
                 <div class="form-group">
-                    <label for="aplicacao">Aplicação Inicial:</label>
-                    <input type="number" class="form-control" id="aplicacao" step="1" required>
+                    <label for="initial_application">Aplicação Inicial:</label>
+                    <input type="number" class="form-control" id="initial_application" step="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="aportes">Aportes por mês:</label>
-                    <input type="number" class="form-control" id="aportes" step="1" required>
+                    <label for="contributions_monthly">Aportes por mês:</label>
+                    <input type="number" class="form-control" id="contributions_monthly" step="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="idade_aposentadoria">Idade em que pretende se aposentar:</label>
-                    <input type="number" class="form-control" id="idade_aposentadoria" step="1" required>
+                    <label for="age_retireday">Idade em que pretende se aposentar:</label>
+                    <input type="number" class="form-control" id="age_retireday" step="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="gasto_mensal">Gasto Mensal após aposentadoria:</label>
-                    <input type="number" class="form-control" id="gasto_mensal" step="1" required>
+                    <label for="spent_monthly">Gasto Mensal após aposentadoria:</label>
+                    <input type="number" class="form-control" id="spent_monthly" step="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="banco">Escolha o método de previdência:</label>
-                    <select class="form-control" id="banco" required>
+                    <label for="bank">Escolha o banco de sua previdência:</label>
+                    <select class="form-control" id="bank" required>
                         <option value="" selected disabled></option>
                         <option value="Itau">Itaú</option>
                         <option value="Santander">Santander</option>
                         <option value="Bradesco">Bradesco</option>
-                        <option value="Banco do Brasil">Banco do Brasil</option>
+                        <option value="Banco_do_Brasil">Banco do Brasil</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="application_type">Tipo de aplicação</label>
+                    <select class="form-control" id="application_type" required>
+                        <option value="" selected disabled></option>
+                        <option value="Renda_Fixa">Renda Fixa</option>
+                        <option value="Renda_Variavel">Renda Variavél</option>
+                        <option value="Multimercado">Multimercado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <label >Métodos de aposentadoria</label>
+                        <div>
+                            <input type="radio" class="form-check-input" id="PGBL" name="method" value="PGBL" required>
+                            <label class="form-check-label" for="PGBL">PGBL</label>
+                        </div>
+                        <div>
+                            <input type="radio" class="form-check-input" id="VGBL" name="method" value="VGBL" required>
+                            <label class="form-check-label" for="VGBL">VGBL</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn">Calcular</button>
@@ -63,16 +84,16 @@
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+<script type="text/javascript">
     var ctx = document.getElementById("lineChart").getContext("2d");
     var lineChart = new Chart(ctx, {
         type: "line",
         data: {
-            labels: {{ labels | tojson }},
+            labels: [], // Inicialmente vazio
             datasets: [
                 {
                     label: "Data points",
-                    data: {{ values | tojson }},
+                    data: [], // Inicialmente vazio
                     fill: false,
                     borderColor: "rgb(75, 192, 192)",
                     lineTension: 0.1
@@ -82,6 +103,31 @@
         options: {
             responsive: false
         }
+    });
+    // Função para atualizar o gráfico
+    function updateChart(data) {
+        lineChart.data.labels = data.labels;
+        lineChart.data.datasets[0].data = data.values;
+        lineChart.update();
+    }
+
+    // Interceptar o envio do formulário
+    document.getElementById('pensionForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar o envio padrão do formulário
+
+        var formData = new FormData(this);
+
+        // Enviar os dados ao backend usando fetch
+        fetch('/calculate', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Atualizar o gráfico com os dados recebidos do backend
+            updateChart(data);
+        })
+        .catch(error => console.error('Error:', error));
     });
 </script>
 

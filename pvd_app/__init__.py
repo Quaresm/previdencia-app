@@ -33,8 +33,8 @@ def create_app():
     mail.init_app(app)
 
     from pvd_app.structure.models import Users
-    from pvd_app.pages.auth import auth
-    from pvd_app.pages.views import views
+    from pvd_app.routes.auth import auth
+    from pvd_app.routes.views import views
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
