@@ -18,23 +18,23 @@
                 </div>
                 <div class="form-group">
                     <label for="initial_application">Aplicação Inicial:</label>
-                    <input type="number" class="form-control" id="initial_application" step="1" required>
+                    <input type="number" class="form-control" name="initial_application" id="initial_application" step="1" required>
                 </div>
                 <div class="form-group">
                     <label for="contributions_monthly">Aportes por mês:</label>
-                    <input type="number" class="form-control" id="contributions_monthly" step="1" required>
+                    <input type="number" class="form-control" name="contributions_monthly" id="contributions_monthly" step="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="age_retireday">Idade em que pretende se aposentar:</label>
-                    <input type="number" class="form-control" id="age_retireday" step="1" required>
+                    <label for="age_retireday">Quando pretende se aposentar:</label>
+                    <input type="number" class="form-control" name="date_retireday" id="date_retireday" step="1" required>
                 </div>
                 <div class="form-group">
                     <label for="spent_monthly">Gasto Mensal após aposentadoria:</label>
-                    <input type="number" class="form-control" id="spent_monthly" step="1" required>
+                    <input type="number" class="form-control" name="spent_monthly" id="spent_monthly" step="1" required>
                 </div>
                 <div class="form-group">
                     <label for="bank">Escolha o banco de sua previdência:</label>
-                    <select class="form-control" id="bank" required>
+                    <select class="form-control" name="bank" id="bank" required>
                         <option value="" selected disabled></option>
                         <option value="Itau">Itaú</option>
                         <option value="Santander">Santander</option>
@@ -44,22 +44,22 @@
                 </div>
                 <div class="form-group">
                     <label for="application_type">Tipo de aplicação</label>
-                    <select class="form-control" id="application_type" required>
+                    <select class="form-control" name="application_type" id="application_type" required>
                         <option value="" selected disabled></option>
-                        <option value="Renda_Fixa">Renda Fixa</option>
-                        <option value="Renda_Variavel">Renda Variavél</option>
-                        <option value="Multimercado">Multimercado</option>
+                        <option value="fixed_income">Renda Fixa</option>
+                        <option value="variable_income">Renda Variavél</option>
+                        <option value="multi_market">Multimercado</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <div class="form-check">
                         <label >Métodos de aposentadoria</label>
                         <div>
-                            <input type="radio" class="form-check-input" id="PGBL" name="method" value="PGBL" required>
+                            <input type="radio" class="form-check-input" id="PGBL" name="method_pgbl" value="PGBL" required>
                             <label class="form-check-label" for="PGBL">PGBL</label>
                         </div>
                         <div>
-                            <input type="radio" class="form-check-input" id="VGBL" name="method" value="VGBL" required>
+                            <input type="radio" class="form-check-input" id="VGBL" name="method_vgbl" value="VGBL" required>
                             <label class="form-check-label" for="VGBL">VGBL</label>
                         </div>
                     </div>
