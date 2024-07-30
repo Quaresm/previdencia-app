@@ -46,78 +46,107 @@ class Simulate():
 
         return session
     
-    def simulate_recipe_bank(self, initial_application, contributions_monthly, date_retireday, spent_monthly, bank, application_type, method, total_income):
-        limit_total_income = total_income * 12/100
+    def simulate_recipe_bank(self, brute_income, initial_application, contributions_monthly, date_retireday, spent_monthly, validate_bank, application_type, method):
+        # Calcula a renda máxima aplicavél caso passe de 12% da renda bruta se encaixa em VGBL
+        limit_total_income = brute_income * 12/100
+        # Verifica se a renda aplicavél é menor ou igual a 12% da renda bruta
         if limit_total_income <= contributions_monthly and method == 'PGBL':
+            # Define o número de meses por ano
             monthly_per_year = 12
+
+            # Obtém a data de hoje e o ano atual
             today_date = date.today()
             current_year = today_date.year
+
+            # Calcula a quantidade de anos até a aposentadoria
             quantity_years = date_retireday - current_year
 
-            bank_application_mapping = {
-                'Itau': {'fixed_income': 12.30/100, 'variable_income': 14/100 , 'multi_market':15/100,'tax_administrative':0.95/100},
-                'Santander': {'fixed_income': 12.50/100, 'variable_income': 13/100, 'multi_market': 14/100, 'tax_administrative': 0.99/100},
-                'Bradesco': {'fixed_income': 12.85/100, 'variable_income': 12/100, 'multi_market': 13/100, 'tax_administrative': 0.98/100},
-                'Banco_do_Brasil': {'fixed_income': 12/100, 'variable_income': 11/100, 'multi_market': 12/100, 'tax_administrative': 1/100}
-            }
+            if validate_bank:
 
-            if bank in bank_application_mapping and application_type in bank_application_mapping[bank]:
-                application_rate = bank_application_mapping[bank][application_type]
-                tax_administrative = bank_application_mapping[bank]['tax_administrative']
+                # Mapeia as taxas de aplicação para diferentes bancos
+                bank_application_mapping = {
+                    'fixed_income': 12.50 / 100, 
+                    'variable_income': 13 / 100, 
+                    'multi_market': 14 / 100, 
+                    'tax_administrative': 0.99 / 100
+                }
 
-                # Primeiro montante do mês
+                # Obtém a taxa de aplicação e a taxa administrativa do dicionário
+                application_rate = bank_application_mapping.get(application_type, 0)
+                tax_administrative = bank_application_mapping['tax_administrative']
+
+                # Calcula o montante do primeiro mês
                 first_month_money = (initial_application + contributions_monthly) * (1 + application_rate)
 
-                # Total de contribuições ao longo dos anos (usando juros compostos anuais)
-                contribution_total = first_month_money * ((1 + application_rate)**quantity_years - 1) / application_rate
-                
-                total_money = (initial_application + contribution_total) * (1 - tax_administrative)
+                # Calcula o total de contribuições ao longo dos anos usando juros compostos anuais
+                contribution_total = (initial_application + contributions_monthly) * ((1 + application_rate) ** quantity_years - 1) / application_rate
 
-                # Total gasto ao longo dos anos
+                # Calcula o montante total após descontar a taxa administrativa
+                total_money = (first_month_money + contribution_total) * (1 - tax_administrative)
+
+                # Calcula o total gasto ao longo dos anos
                 spent_total_per_years = total_money / (spent_monthly * monthly_per_year)
-            
-                return {
+
+                result = {
                     'first_month_money': first_month_money,
                     'contribution_total': contribution_total,
                     'total_money': total_money,
                     'spent_total_per_years': spent_total_per_years
+                }
+
+                return result
+            else:
+                # Caso validate_bank seja False, você pode retornar algum valor padrão ou mensagem
+                return {
+                    'error': 'Banco não marcado ou taxa de aplicação não disponível.'
                 }
         else:
+            # Define o número de meses por ano
             monthly_per_year = 12
+
+            # Obtém a data de hoje e o ano atual
             today_date = date.today()
             current_year = today_date.year
+
+            # Calcula a quantidade de anos até a aposentadoria
             quantity_years = date_retireday - current_year
 
-            bank_application_mapping = {
-                'Itau': {'fixed_income': 12.30/100, 'variable_income': 14/100 , 'multi_market':15/100,'tax_administrative':0.95/100},
-                'Santander': {'fixed_income': 12.50/100, 'variable_income': 13/100, 'multi_market': 14/100, 'tax_administrative': 0.99/100},
-                'Bradesco': {'fixed_income': 12.85/100, 'variable_income': 12/100, 'multi_market': 13/100, 'tax_administrative': 0.98/100},
-                'Banco_do_Brasil': {'fixed_income': 12/100, 'variable_income': 11/100, 'multi_market': 12/100, 'tax_administrative': 1/100}
-            }
+            if validate_bank:
 
-            if bank in bank_application_mapping and application_type in bank_application_mapping[bank]:
-                application_rate = bank_application_mapping[bank][application_type]
-                tax_administrative = bank_application_mapping[bank]['tax_administrative']
+                # Mapeia as taxas de aplicação para diferentes bancos
+                bank_application_mapping = {
+                    'fixed_income': 12.50 / 100, 
+                    'variable_income': 13 / 100, 
+                    'multi_market': 14 / 100, 
+                    'tax_administrative': 0.99 / 100
+                }
 
-                # Primeiro montante do mês
+                # Obtém a taxa de aplicação e a taxa administrativa do dicionário
+                application_rate = bank_application_mapping.get(application_type, 0)
+                tax_administrative = bank_application_mapping['tax_administrative']
+
+                # Calcula o montante do primeiro mês
                 first_month_money = (initial_application + contributions_monthly) * (1 + application_rate)
 
-                # Total de contribuições ao longo dos anos (usando juros compostos anuais)
-                contribution_total = first_month_money * ((1 + application_rate)**quantity_years - 1) / application_rate
-                
-                total_money = (initial_application + contribution_total) * (1 - tax_administrative)
+                # Calcula o total de contribuições ao longo dos anos usando juros compostos anuais
+                contribution_total = (initial_application + contributions_monthly) * ((1 + application_rate) ** quantity_years - 1) / application_rate
 
-                # Total gasto ao longo dos anos
+                # Calcula o montante total após descontar a taxa administrativa
+                total_money = (first_month_money + contribution_total) * (1 - tax_administrative)
+
+                # Calcula o total gasto ao longo dos anos
                 spent_total_per_years = total_money / (spent_monthly * monthly_per_year)
-            
-                return {
+
+                result = {
                     'first_month_money': first_month_money,
                     'contribution_total': contribution_total,
                     'total_money': total_money,
                     'spent_total_per_years': spent_total_per_years
                 }
 
-
-
-            
-            
+                return result
+            else:
+                # Caso validate_bank seja False, você pode retornar algum valor padrão ou mensagem
+                return {
+                    'error': 'Banco não validado ou taxa de aplicação não disponível.'
+                }

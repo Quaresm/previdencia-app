@@ -17,6 +17,10 @@
                     <label class="alerta">Os valores financeiros devem ser em reais,<br>não há necessidade de preencher R$</label>
                 </div>
                 <div class="form-group">
+                    <label for="brute_income">Sua renda bruta atual:</label>
+                    <input type="number" class="form-control" name="brute_income" id="brute_income" step="1" required>
+                </div>
+                <div class="form-group">
                     <label for="initial_application">Aplicação Inicial:</label>
                     <input type="number" class="form-control" name="initial_application" id="initial_application" step="1" required>
                 </div>
@@ -31,16 +35,6 @@
                 <div class="form-group">
                     <label for="spent_monthly">Gasto Mensal após aposentadoria:</label>
                     <input type="number" class="form-control" name="spent_monthly" id="spent_monthly" step="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="bank">Escolha o banco de sua previdência:</label>
-                    <select class="form-control" name="bank" id="bank" required>
-                        <option value="" selected disabled></option>
-                        <option value="Itau">Itaú</option>
-                        <option value="Santander">Santander</option>
-                        <option value="Bradesco">Bradesco</option>
-                        <option value="Banco_do_Brasil">Banco do Brasil</option>
-                    </select>
                 </div>
                 <div class="form-group">
                     <label for="application_type">Tipo de aplicação</label>
