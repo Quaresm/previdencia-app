@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, flash, request, redirect, abort
 from flask_login import current_user, login_required, logout_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
+
+from werkzeug.security import generate_password_hash, check_password_hash
 from pvd_app.structure.models import Users
+from pvd_app.pages_util.simulate_pvd import Simulate
+
 from pvd_app import mail
 from .auth import is_valid_password, is_valid_email
 import secrets, hashlib
@@ -119,9 +122,11 @@ def reset_password_with_token(token):
                         flash('Falha ao redefinir a senha', category='error')
     return render_template('user_page/reset_password.html',rota_atual=rota_atual, user_email=user_email)
 
-@views.route('/simulate_pvd')
+@views.route('/simulate_pvd', methods=['GET', 'POST'])
 @login_required
 def pre_simulation():
+    class_simulate = Simulate()
+
     data = [
         ("01-01-2024", 1234),
         ("02-01-2024", 1334),
@@ -129,13 +134,51 @@ def pre_simulation():
         ("04-01-2024", 1434),
         ("05-01-2024", 1534),
         ("06-01-2024", 1314),
-
     ]
 
     labels = [row[0] for row in data]
     values = [row[1] for row in data]
-    if labels and values:
-        return render_template('pages/simulate_pvd.html', labels=labels, values=values)
-    else:
-        flash('Dados de simulação não encontrados.', category='error')
-        return redirect('/home')
+
+    # Verifica se é uma requisição POST
+    if request.method == 'POST':
+        try:
+            # Pega os dados do formulário e converte para os tipos corretos
+            content = {
+                'brute_income': float(request.form.get('brute_income')),
+                'initial_application': float(request.form.get('initial_application')),
+                'contributions_monthly': float(request.form.get('contributions_monthly')),
+                'date_retireday': int(request.form.get('date_retireday')),  # Assumindo ano como inteiro
+                'spent_monthly': float(request.form.get('spent_monthly')),
+                'application_type': request.form.get('application_type'),
+                'method_type': request.form.get('method_type'),
+            }
+
+            # Verifica se o método de previdência está correto
+            if content['method_type'] not in ['method_pgbl', 'method_vgbl']:
+                raise ValueError("Método de previdência inválido")
+
+            # Executa a simulação
+            response = class_simulate.simulate_recipe_bank(
+                content['brute_income'],
+                content['initial_application'],
+                content['contributions_monthly'],
+                content['date_retireday'],
+                content['spent_monthly'],
+                content['application_type'],
+                content['method_type']
+            )
+
+            # Adiciona os resultados à variável content
+            content.update(response)
+
+            return render_template('pages/simulate_pvd.html', labels=labels, values=values, content=content)
+
+        except ValueError as e:
+            flash(f'Erro de valor: {str(e)}', category='error')
+            return redirect('/simulate_pvd')
+        except Exception as e:
+            flash(f'Ocorreu um erro: {str(e)}', category='error')
+            return redirect('/simulate_pvd')
+
+    # Caso não seja POST, apenas renderiza a página sem o conteúdo preenchido
+    return render_template('pages/simulate_pvd.html', labels=labels, values=values)

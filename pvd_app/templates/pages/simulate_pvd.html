@@ -12,7 +12,52 @@
     </div>
     <div class="row">
         <div class="col">
-            <form>
+            <form method="POST" action="/simulate_pvd">
+                {% if content %}
+                    <div class="form-group">
+                        <label class="alerta">Os valores financeiros devem ser em reais,<br>não há necessidade de preencher R$</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="brute_income">Sua renda bruta atual:</label>
+                        <input type="number" class="form-control" name="brute_income" id="brute_income" value="{{ content.brute_income }}" step="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="initial_application">Aplicação Inicial:</label>
+                        <input type="number" class="form-control" name="initial_application" id="initial_application" value="{{ content.initial_application }}" step="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contributions_monthly">Aportes por mês:</label>
+                        <input type="number" class="form-control" name="contributions_monthly" id="contributions_monthly" value="{{ content.contributions_monthly }}" step="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date_retireday">Quando pretende se aposentar:</label>
+                        <input type="date" class="form-control" name="date_retireday" id="date_retireday" value="{{ content.date_retireday }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="spent_monthly">Gasto Mensal após aposentadoria:</label>
+                        <input type="number" class="form-control" name="spent_monthly" id="spent_monthly" value="{{ content.spent_monthly }}" step="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="application_type">Tipo de aplicação</label>
+                        <select class="form-control" name="application_type" id="application_type" required>
+                            <option value="" selected disabled></option>
+                            <option value="fixed_income" {% if content.application_type == 'fixed_income' %}selected{% endif %}>Renda Fixa</option>
+                            <option value="variable_income" {% if content.application_type == 'variable_income' %}selected{% endif %}>Renda Variável</option>
+                            <option value="multi_market" {% if content.application_type == 'multi_market' %}selected{% endif %}>Multimercado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="method_type">Método desejável</label>
+                        <select class="form-control" name="method_type" id="method_type" required>
+                            <option value="" selected disabled></option>
+                            <option value="method_pgbl" {% if content.method_type == 'method_pgbl' %}selected{% endif %}>Método PGBL</option>
+                            <option value="method_vgbl" {% if content.method_type == 'method_vgbl' %}selected{% endif %}>Método VGBL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn">Calcular</button>
+                    </div>
+                {% else %}
                 <div class="form-group">
                     <label class="alerta">Os valores financeiros devem ser em reais,<br>não há necessidade de preencher R$</label>
                 </div>
@@ -46,21 +91,18 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <div class="form-check">
-                        <label >Métodos de aposentadoria</label>
-                        <div>
-                            <input type="radio" class="form-check-input" id="PGBL" name="method_pgbl" value="PGBL" required>
-                            <label class="form-check-label" for="PGBL">PGBL</label>
-                        </div>
-                        <div>
-                            <input type="radio" class="form-check-input" id="VGBL" name="method_vgbl" value="VGBL" required>
-                            <label class="form-check-label" for="VGBL">VGBL</label>
-                        </div>
-                    </div>
+                    <label for="application_type">Método desejavél</label>
+                    <select class="form-control" name="method_type" id="method_type" required>
+                        <option value="" selected disabled></option>
+                        <option value="method_pgbl">Método PGBL</option>
+                        <option value="method_vgbl">Método VGBL</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn">Calcular</button>
                 </div>
+
+                {% endif %}
             </form>
         </div>
         <div class="col">
@@ -97,31 +139,6 @@
         options: {
             responsive: false
         }
-    });
-    // Função para atualizar o gráfico
-    function updateChart(data) {
-        lineChart.data.labels = data.labels;
-        lineChart.data.datasets[0].data = data.values;
-        lineChart.update();
-    }
-
-    // Interceptar o envio do formulário
-    document.getElementById('pensionForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Evitar o envio padrão do formulário
-
-        var formData = new FormData(this);
-
-        // Enviar os dados ao backend usando fetch
-        fetch('/calculate', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Atualizar o gráfico com os dados recebidos do backend
-            updateChart(data);
-        })
-        .catch(error => console.error('Error:', error));
     });
 </script>
 
