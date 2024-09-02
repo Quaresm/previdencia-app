@@ -25,8 +25,6 @@ class Users(db.Model, UserMixin):
             db.session.add(new_user)
             db.session.commit()
 
-            check_user = Users.query.filter_by(email=email).first()
-
     def update_user(self, username, email, current_user):
         drop_constraint_sql = text("ALTER TABLE users DROP CONSTRAINT users_email_key")
         db.session.execute(drop_constraint_sql)

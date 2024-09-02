@@ -46,7 +46,8 @@ class Simulate():
 
         return session
     
-    def simulate_recipe_bank(self, brute_income, initial_application, contributions_monthly, date_retireday, spent_monthly, validate_bank, application_type, method):
+    def simulate_recipe_bank(self, brute_income, initial_application, contributions_monthly,
+                            date_retireday, spent_monthly, validate_bank, application_type, method):
         try:
             # Calcula a renda máxima aplicável (12% da renda bruta)
             limit_total_income = brute_income * 12 / 100

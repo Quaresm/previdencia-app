@@ -5,6 +5,7 @@ from flask_mail import Message
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from pvd_app.structure.models import Users
+from pvd_app.structure.results import Results
 from pvd_app.pages_util.simulate_pvd import Simulate
 
 from pvd_app import mail
@@ -14,6 +15,7 @@ import urllib.parse
 
 views = Blueprint('views', __name__)
 users = Users()
+results = Results()
 
 @views.route('/home')
 @login_required
@@ -156,7 +158,20 @@ def pre_simulation():
             # Verifica se o método de previdência está correto
             if content['method_type'] not in ['method_pgbl', 'method_vgbl']:
                 raise ValueError("Método de previdência inválido")
-
+            
+            # Registra no banco a pesquisa feita
+            # register_result = results.register_results(
+            #     current_user.email,
+            #     content['brute_income'],
+            #     content['initial_application'],
+            #     content['contributions_monthly'],
+            #     content['date_retireday'],
+            #     content['spent_monthly'],
+            #     content['application_type'],
+            #     content['method_type'])
+            
+            # print( register_result )
+            
             # Executa a simulação
             response = class_simulate.simulate_recipe_bank(
                 content['brute_income'],
@@ -167,7 +182,7 @@ def pre_simulation():
                 content['application_type'],
                 content['method_type']
             )
-
+            
             # Adiciona os resultados à variável content
             content.update(response)
 
