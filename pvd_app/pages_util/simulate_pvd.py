@@ -46,16 +46,20 @@ class Simulate():
 
         return session
     
-    def simulate_recipe_bank(self, brute_income, initial_application, contributions_monthly,
+    def simulate_recipe(self, brute_income, initial_application, contributions_monthly,
                             date_retireday, spent_monthly, validate_bank, application_type, method):
         try:
-            # Calcula a renda máxima aplicável (12% da renda bruta)
-            limit_total_income = brute_income * 12 / 100
+            """
+            Calcula a renda máxima aplicável mensal. 
+            Ao qual limit_total_income é o resultado do calculo entre brute_income que é (a renda bruta atual) multiplicado por
+             12 (meses) , multiplicado por 12% e por fim dividio por 12 meses resultando quanto é o máximo possível para investir por mês.
+            """
+            limit_total_income = ((brute_income * 12) * 12 / 100) / 12
             
-            # Verifica se a renda aplicável é menor ou igual a 12% da renda bruta
+            # Verifica se a renda aplicável mensal é menor ou igual a limit_total_income
             if limit_total_income <= contributions_monthly:
                 # Define o número de meses por ano
-                monthly_per_year = 12
+                monthlys_per_year = 12
 
                 # Obtém a data de hoje e o ano atual
                 today_date = date.today()
@@ -63,25 +67,44 @@ class Simulate():
 
                 # Calcula a quantidade de anos até a aposentadoria
                 quantity_years = date_retireday - current_year
+                
+                # Calcula a quantidade de meses até a aposentadoria
+                quantity_months = quantity_years * monthlys_per_year
 
                 if validate_bank:
-                    # Mapeia as taxas de aplicação para diferentes bancos
+                    """
+                    fixed_income é Renda fixa,
+                    variable_income é Renda Variável 
+                    multi_market é Mercado de ações
+                    tax_administrative é a taxa administrativa daquela aplicação mensal 
+                    """
                     bank_application_mapping = {
-                        'fixed_income': 12.50 / 100, 
-                        'variable_income': 13 / 100, 
-                        'multi_market': 14 / 100, 
-                        'tax_administrative': 0.99 / 100
+                        'fixed_income': (12 / 100) / 12, 
+                        'variable_income': (13 / 100) / 12, 
+                        'multi_market': (14 / 100) / 12, 
+                        'tax_administrative': (0.99 / 100) 
                     }
 
-                    # Obtém a taxa de aplicação e a taxa administrativa do dicionário
-                    application_rate = bank_application_mapping.get(application_type, 0)
+                    # Conforme a opção selecionada pelo usuário na application_type, eu pesquiso no dicionario o primeiro valor igual 
+                    selected_application_type = bank_application_mapping.get(application_type, 0)
+                    # Como se trata de uma simulação com a opção Banco ativa, eu pego o valor do dicionário da taxa administrativa
                     tax_administrative = bank_application_mapping['tax_administrative']
 
+                    # Inicializa o primeiro montante
+                    total_amount = initial_application + contributions_monthly
+
+                    # Loop para calcular o montante ao longo dos meses com aportes mensais e juros
+                    for i in range(1, quantity_months):  # Começa a partir do segundo mês
+                        # Adiciona o aporte mensal (a partir do segundo mês)
+                        total_amount += contributions_monthly
+                        # Aplica os juros sobre o montante acumulado
+                        total_amount += total_amount * (selected_application_type)
+
                     # Calcula o montante do primeiro mês
-                    first_month_money = (initial_application + contributions_monthly) * (1 + application_rate)
+                    first_month_money = (initial_application + contributions_monthly) * selected_application_type
 
                     # Calcula o total de contribuições ao longo dos anos usando juros compostos anuais
-                    contribution_total = (initial_application + contributions_monthly) * ((1 + application_rate) ** quantity_years - 1) / application_rate
+                    contribution_total = (initial_application + contributions_monthly) * ((1 + selected_application_type) ** quantity_years - 1) / selected_application_type
 
                     # Calcula o montante total após descontar a taxa administrativa
                     total_money = (first_month_money + contribution_total) * (1 - tax_administrative)
@@ -115,11 +138,11 @@ class Simulate():
                         'tax_administrative': 0.99 / 100
                     }
 
-                    application_rate = bank_application_mapping.get(application_type, 0)
+                    selected_application_type = bank_application_mapping.get(application_type, 0)
                     tax_administrative = bank_application_mapping['tax_administrative']
 
-                    first_month_money = (initial_application + contributions_monthly) * (1 + application_rate)
-                    contribution_total = (initial_application + contributions_monthly) * ((1 + application_rate) ** quantity_years - 1) / application_rate
+                    first_month_money = (initial_application + contributions_monthly) * (1 + selected_application_type)
+                    contribution_total = (initial_application + contributions_monthly) * ((1 + selected_application_type) ** quantity_years - 1) / selected_application_type
                     total_money = (first_month_money + contribution_total) * (1 - tax_administrative)
                     spent_total_per_years = total_money / (spent_monthly * monthly_per_year)
 

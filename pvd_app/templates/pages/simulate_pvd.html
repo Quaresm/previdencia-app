@@ -5,7 +5,34 @@
 {% block content %}
 <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
+<!-- Popup Modal -->
+<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="popupModalLabel">Confirmação de Simulação</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Irá prosseguir com a simulação com as taxas de banco, ou por conta própria?
+        </div>
+        <div class="modal-footer">
+          <form id="confirmationForm" method="POST" action="/simulate_pvd">
+              <input type="hidden" name="validate_bank" id="validate_bank" value="">
+              <button type="button" class="btn btn-primary" id="withBank" onclick="submitChoice(true)">Com taxas de banco</button>
+              <button type="button" class="btn btn-secondary" id="withoutBank" onclick="submitChoice(false)">Por conta própria</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <section class="container">
     <div class="row">
         <h1 class="col title" >Simulação da previdência privada</h1>
@@ -31,7 +58,7 @@
                     </div>
                     <div class="form-group">
                         <label for="date_retireday">Quando pretende se aposentar:</label>
-                        <input type="date" class="form-control" name="date_retireday" id="date_retireday" value="{{ content.date_retireday }}" required>
+                        <input type="date" class="form-control" placeholder="Digite o ano ex: 2060" name="date_retireday" id="date_retireday" value="{{ content.date_retireday }}" required>
                     </div>
                     <div class="form-group">
                         <label for="spent_monthly">Gasto Mensal após aposentadoria:</label>
@@ -110,6 +137,7 @@
         </div>
     </div>
 </section>
+
 <script>
     // Bloquear entrada de números decimais nos campos de entrada
     var inputs = document.querySelectorAll('input[type="number"]');
@@ -121,6 +149,38 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript">
+    var ctx = document.getElementById("lineChart").getContext("2d");
+    var lineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [], // Inicialmente vazio
+            datasets: [
+                {
+                    label: "Data points",
+                    data: [], // Inicialmente vazio
+                    fill: false,
+                    borderColor: "rgb(75, 192, 192)",
+                    lineTension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: false
+        }
+    });
+    // Mostrar o popup ao carregar a página
+    $(document).ready(function() {
+        $('#popupModal').modal('show');
+    });
+
+    // Bloquear entrada de números decimais nos campos de entrada
+    var inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\d]/, ''); // Remove qualquer coisa que não seja dígito
+        });
+    });
+
     var ctx = document.getElementById("lineChart").getContext("2d");
     var lineChart = new Chart(ctx, {
         type: "line",
