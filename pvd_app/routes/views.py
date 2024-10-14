@@ -141,26 +141,21 @@ def pre_simulation():
     labels = [row[0] for row in data]
     values = [row[1] for row in data]
 
+    # Captura o parâmetro da URL
     # Verifica se é uma requisição POST
     if request.method == 'POST':
         try:
             # Pega os dados do formulário e converte para os tipos corretos
             content = {
-                'brute_income': float(request.form.get('brute_income')),
-                'initial_application': float(request.form.get('initial_application')),
-                'contributions_monthly': float(request.form.get('contributions_monthly')),
+                'brute_income': int(request.form.get('brute_income')),
+                'initial_application': int(request.form.get('initial_application')),
+                'contributions_monthly': int(request.form.get('contributions_monthly')),
                 'date_retireday': int(request.form.get('date_retireday')),  # Assumindo ano como inteiro
-                'spent_monthly': float(request.form.get('spent_monthly')),
+                'spent_monthly': int(request.form.get('spent_monthly')),
                 'application_type': request.form.get('application_type'),
                 'method_type': request.form.get('method_type'),
-                'validate_bank' : request.args.get('validate_bank', default="False")  # Captura o parâmetro da URL
+                'validate_bank' : request.form.get('validate_bank', default="False") # Captura o parâmetro da URL
             }
-
-            print(content['validate_bank'])
-
-            # Verifica se o método de previdência está correto
-            if content['method_type'] not in ['method_pgbl', 'method_vgbl']:
-                flash("Método de previdência inválido", category='error')
             
             # Registra no banco a pesquisa feita
             # register_result = results.register_results(
@@ -183,7 +178,8 @@ def pre_simulation():
                 content['date_retireday'],
                 content['spent_monthly'],
                 content['application_type'],
-                content['method_type']
+                content['method_type'],
+                content['validate_bank']
             )
             
             # Adiciona os resultados à variável content

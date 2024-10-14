@@ -12,8 +12,8 @@
 {% if content %}
 {% else %}
     <!-- Popup Modal -->
-    <div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="popupModalLabel">Confirmação de Simulação</h5>
@@ -22,7 +22,7 @@
             </button>
             </div>
             <div class="modal-body">
-            Irá prosseguir com a simulação com as taxas médias dos bancos e taxa administrativa,<br> ou com taxas médias e sem taxa administrativa?
+                Irá prosseguir com a simulação com as taxas médias dos bancos e taxa administrativa,<br> ou com taxas médias e sem taxa administrativa?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-choose1" id="withBank" onclick="submitChoice(true)">Com taxas de banco</button>
@@ -30,8 +30,8 @@
                 <button type="button" class="btn-choose2" id="withoutBank" onclick="submitChoice(false)">Sem taxa Adminis.</button>
             </div>
         </div>
-        </div>
-  </div>
+</div>
+</div>
 {% endif %}
 <section class="container">
     <div class="row">
@@ -53,7 +53,7 @@
                         <input type="number" class="form-control" name="initial_application" id="initial_application" value="{{ content.initial_application }}" step="1" required>
                     </div>
                     <div class="form-group">
-                        <label for="contributions_monthly">Aportes por mês:</label>
+                        <label for="contributions_monthly">Aportes apartir do segundo Mês:</label>
                         <input type="number" class="form-control" name="contributions_monthly" id="contributions_monthly" value="{{ content.contributions_monthly }}" step="1" required>
                     </div>
                     <div class="form-group">
@@ -73,19 +73,21 @@
                             <option value="multi_market" {% if content.application_type == 'multi_market' %}selected{% endif %}>Multimercado</option>
                         </select>
                     </div>
-                    {% if request.args.get('validate_bank') != 'False' %}
-                        <div class="form-group">
-                            <label for="method_type">Método desejável</label>
-                            <select class="form-control" name="method_type" id="method_type" required>
-                                <option value="" selected disabled></option>
-                                <option value="method_pgbl" {% if content.method_type == 'method_pgbl' %}selected{% endif %}>Método PGBL</option>
-                                <option value="method_vgbl" {% if content.method_type == 'method_vgbl' %}selected{% endif %}>Método VGBL</option>
-                            </select>
-                        </div>
-                    {% endif %}
+                    <div class="form-group" id="methodSelect" style="display: none;">
+                        <label for="method_type">Método desejável</label>
+                        <select class="form-control" name="method_type" id="method_type" required>
+                            <option value="" selected disabled></option>
+                            <option value="PGBL" {% if content.method_type == 'PGBL' %}selected{% endif %}>Método PGBL</option>
+                            <option value="VGBL" {% if content.method_type == 'VGBL' %}selected{% endif %}>Método VGBL</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="validate_bank" id="validateBankInput" value="False">
+
                     <div class="form-group">
                         <button type="submit" class="btn">Calcular</button>
                     </div>
+
                 {% else %}
                 <div class="form-group">
                     <label class="alerta">Os valores financeiros devem ser em reais,<br>não há necessidade de preencher R$</label>
@@ -99,7 +101,7 @@
                     <input type="number" class="form-control" name="initial_application" id="initial_application" step="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="contributions_monthly">Aportes por mês:</label>
+                    <label for="contributions_monthly">Aportes apartir do segundo Mês:</label>
                     <input type="number" class="form-control" name="contributions_monthly" id="contributions_monthly" step="1" required>
                 </div>
                 <div class="form-group">
@@ -119,16 +121,17 @@
                         <option value="multi_market">Multimercado</option>
                     </select>
                 </div>
-                {% if request.args.get('validate_bank') != 'False' %}
-                    <div class="form-group">
-                        <label for="application_type">Método desejavél</label>
-                        <select class="form-control" name="method_type" id="method_type" required>
-                            <option value="" selected disabled></option>
-                            <option value="method_pgbl">Método PGBL</option>
-                            <option value="method_vgbl">Método VGBL</option>
-                        </select>
-                    </div>
-                {% endif %}
+                <div class="form-group" id="methodSelect" style="display: none;">
+                    <label for="application_type">Método desejavél</label>
+                    <select class="form-control" name="method_type" id="method_type" required>
+                        <option value="" selected disabled></option>
+                        <option value="PGBL">Método PGBL</option>
+                        <option value="VGBL">Método VGBL</option>
+                    </select>
+                </div>
+
+                <input type="hidden" name="validate_bank" id="validateBankInput" value="False">
+                
                 <div class="form-group">
                     <button type="submit" class="btn">Calcular</button>
                 </div>
@@ -142,15 +145,6 @@
     </div>
 </section>
 
-<script>
-    // Bloquear entrada de números decimais nos campos de entrada
-    var inputs = document.querySelectorAll('input[type="number"]');
-    inputs.forEach(function(input) {
-        input.addEventListener('input', function() {
-            this.value = this.value.replace(/[^\d]/, ''); // Remove qualquer coisa que não seja dígito
-        });
-    });
-</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript">
     var ctx = document.getElementById("lineChart").getContext("2d");
@@ -176,12 +170,46 @@
         $('#popupModal').modal('show');
     });
 
+</script>
+
+<script type="text/javascript">
+    // Função que altera o estilo de acordo com o valor de validate_bank na URL
+    function toggleMethodSelect() {
+        // Obtém o valor de 'validate_bank' da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const validateBank = urlParams.get('validate_bank');
+    
+        // Obtém o elemento 'methodSelect' e 'method_type'
+        const methodSelect = document.getElementById('methodSelect');
+        const methodType = document.getElementById('method_type');
+    
+        // Se validateBank for 'True', exibe o select, caso contrário, esconde
+        if (validateBank === 'True') {
+            methodSelect.style.display = 'block';
+            methodType.setAttribute('required', 'required'); // Adiciona o required
+        } else {
+            methodSelect.style.display = 'none';
+            methodType.removeAttribute('required'); // Remove o required
+        }
+    }
+
+    // Chama a função ao carregar a página
+    window.onload = function() {
+        toggleMethodSelect();
+    };
+
     // Função para gerenciar a escolha, alterar a URL e fechar o modal
     function submitChoice(validateBank) {
         // Define a nova URL sem recarregar a página
         const newUrl = '/simulate_pvd?validate_bank=' + (validateBank ? 'True' : 'False');
         window.history.pushState({ path: newUrl }, '', newUrl);
-
+    
+        // Atualiza o valor do campo oculto com a escolha
+        document.getElementById('validateBankInput').value = validateBank ? 'True' : 'False';
+    
+        // Atualiza a exibição do método desejável
+        toggleMethodSelect();
+    
         // Fecha o modal
         $('#popupModal').modal('hide');
     }
@@ -193,7 +221,8 @@
             this.value = this.value.replace(/[^\d]/, ''); // Remove qualquer coisa que não seja dígito
         });
     });
-
 </script>
 
+
+    
 {% endblock %}

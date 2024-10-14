@@ -50,85 +50,87 @@ class Simulate():
                             date_retireday, spent_monthly, application_type, method, validate_bank):
         try:
             
-            
+            print(validate_bank)
+            print(method)
             # Verifica se a renda aplicável mensal é menor ou igual a limit_total_income
-            if validate_bank == True:
+            if validate_bank == 'True':
                 """
                 Calcula a renda máxima aplicável mensal. 
                 Ao qual limit_total_income é o resultado do calculo entre brute_income que é (a renda bruta atual) multiplicado por
-                12 (meses) , multiplicado por 12% e por fim dividio por 12 meses resultando quanto é o máximo possível para investir por mês.
+                12 (meses) , multiplicado por 12 por cento e por fim dividio por 12 meses resultando quanto é o máximo possível para investir por mês.
                 """
                 limit_total_income = ((brute_income * 12) * 12 / 100) / 12
+                if method == 'PGBL':
+                    if limit_total_income <= contributions_monthly:
+                        # Define o número de meses por ano
+                        monthlys_per_year = 12
 
-                if limit_total_income <= contributions_monthly and method == "PGBL":
-                    # Define o número de meses por ano
-                    monthlys_per_year = 12
+                        # Obtém a data de hoje e o ano atual
+                        today_date = date.today()
+                        current_year = today_date.year
 
-                    # Obtém a data de hoje e o ano atual
-                    today_date = date.today()
-                    current_year = today_date.year
+                        # Calcula a quantidade de anos até a aposentadoria
+                        quantity_years = date_retireday - current_year
+                        
+                        # Calcula a quantidade de meses até a aposentadoria
+                        quantity_months = quantity_years * monthlys_per_year
 
-                    # Calcula a quantidade de anos até a aposentadoria
-                    quantity_years = date_retireday - current_year
-                    
-                    # Calcula a quantidade de meses até a aposentadoria
-                    quantity_months = quantity_years * monthlys_per_year
+                        """
+                        fixed_income é Renda fixa,
+                        variable_income é Renda Variável 
+                        multi_market é Mercado de ações
+                        tax_administrative é a taxa administrativa daquela aplicação mensal 
+                        """
+                        bank_application_mapping = {
+                            'fixed_income': (12 / 100) / 12, 
+                            'variable_income': (13 / 100) / 12, 
+                            'multi_market': (14 / 100) / 12, 
+                            'tax_administrative': (0.95 / 100) 
+                        }
 
-                    """
-                    fixed_income é Renda fixa,
-                    variable_income é Renda Variável 
-                    multi_market é Mercado de ações
-                    tax_administrative é a taxa administrativa daquela aplicação mensal 
-                    """
-                    bank_application_mapping = {
-                        'fixed_income': (12 / 100) / 12, 
-                        'variable_income': (13 / 100) / 12, 
-                        'multi_market': (14 / 100) / 12, 
-                        'tax_administrative': (0.99 / 100) 
-                    }
+                        # Conforme a opção selecionada pelo usuário na application_type, eu pesquiso no dicionario o primeiro valor igual 
+                        selected_application_type = bank_application_mapping.get(application_type, 0)
+                        # Como se trata de uma simulação com a opção Banco ativa, eu pego o valor do dicionário da taxa administrativa
+                        tax_administrative = bank_application_mapping['tax_administrative']
 
-                    # Conforme a opção selecionada pelo usuário na application_type, eu pesquiso no dicionario o primeiro valor igual 
-                    selected_application_type = bank_application_mapping.get(application_type, 0)
-                    # Como se trata de uma simulação com a opção Banco ativa, eu pego o valor do dicionário da taxa administrativa
-                    tax_administrative = bank_application_mapping['tax_administrative']
+                        try:
+                            print(selected_application_type)
+                            # Inicializa o primeiro mês do montante com a aplicação inicial
+                            total_amount = initial_application 
+                            print(total_amount)
 
-                    try:
-                        # Inicializa o primeiro mês do montante
-                        total_amount = initial_application + contributions_monthly
+                            # Loop para calcular o montante ao longo dos meses
+                            for i in range(1, quantity_months + 1):
+                                # Aplica os juros do mês
+                                total_amount += total_amount * selected_application_type
+                                # Subtrai a taxa administrativa
+                                total_amount -= total_amount * tax_administrative
 
-                        # Aplica o rendimento do primeiro mês antes de entrar no loop
-                        total_amount += total_amount * selected_application_type  # Aplica os juros do primeiro mês
-                        total_amount -= total_amount * tax_administrative  # Aplica a taxa administrativa do primeiro mês
+                                # Adiciona o aporte mensal
+                                total_amount += contributions_monthly
 
-                        # Loop para calcular o montante ao longo dos meses com aportes mensais e juros
-                        for i in range(1, quantity_months):  # Começa a partir do segundo mês
-                            # Adiciona o aporte mensal (a partir do segundo mês)
-                            total_amount += contributions_monthly
-                            # Aplica os juros sobre o montante acumulado
-                            total_amount += total_amount * selected_application_type
-                            # Aplica a taxa administrativa sobre o montante acumulado
-                            total_amount -= total_amount * tax_administrative
+                                # No segundo mês, salva o montante acumulado
+                                if i == 1:
+                                    second_month_money = total_amount
+                            print(second_month_money)
 
-                            # No segundo mês, retorna o montante acumulado (com rendimento do primeiro mês)
-                            if i == 1:
-                                second_month_money = total_amount
+                            # Calcula o total gasto ao longo dos anos
+                            spent_total_per_years = (total_amount / spent_monthly) / 12
 
-                        # Calcula o total gasto ao longo dos anos
-                        spent_total_per_years = total_amount / (spent_monthly * monthlys_per_year)
+                        except TypeError:
+                            flash("Erro: Tipo de dado incorreto encontrado durante o cálculo.", category='error')
+                        except Exception as e:
+                            flash(f"Ocorreu um erro inesperado: {e}", category='error')
 
-                    except TypeError:
-                        flash("Erro: Tipo de dado incorreto encontrado durante o cálculo.", category='error')
-                    except Exception as e:
-                        flash(f"Ocorreu um erro inesperado: {e}", category='error')
-
-                    result = {
-                        'second_month_money': second_month_money,
-                        'total_amount': total_amount,
-                        'spent_total_per_years': spent_total_per_years
-                    }
-                    print(f"REsult com BAnk PGBL{result}")
-                    return result
-                    
+                        result = {
+                            'second_month_money': round(second_month_money),
+                            'total_amount': round(total_amount),
+                            'spent_total_per_years': round(spent_total_per_years)
+                        }
+                        print(f"REsult com BAnk PGBL{result}")
+                        return result
+                    else:
+                        flash(f"Você não pode passar 12 por cento da sua renda anual no investimento mensal", category='error')
                 else:
                     # Define o número de meses por ano
                     monthlys_per_year = 12
@@ -163,27 +165,28 @@ class Simulate():
 
                     try:
                         # Inicializa o primeiro mês do montante
-                        total_amount = initial_application + contributions_monthly
+                        print(selected_application_type)
+                        # Inicializa o primeiro mês do montante com a aplicação inicial
+                        total_amount = initial_application 
+                        print(total_amount)
 
-                        # Aplica o rendimento do primeiro mês antes de entrar no loop
-                        total_amount += total_amount * selected_application_type  # Aplica os juros do primeiro mês
-                        total_amount -= total_amount * tax_administrative  # Aplica a taxa administrativa do primeiro mês
-
-                        # Loop para calcular o montante ao longo dos meses com aportes mensais e juros
-                        for i in range(1, quantity_months):  # Começa a partir do segundo mês
-                            # Adiciona o aporte mensal (a partir do segundo mês)
-                            total_amount += contributions_monthly
-                            # Aplica os juros sobre o montante acumulado
+                        # Loop para calcular o montante ao longo dos meses
+                        for i in range(1, quantity_months + 1):
+                            # Aplica os juros do mês
                             total_amount += total_amount * selected_application_type
-                            # Aplica a taxa administrativa sobre o montante acumulado
+                            # Subtrai a taxa administrativa
                             total_amount -= total_amount * tax_administrative
 
-                            # No segundo mês, retorna o montante acumulado (com rendimento do primeiro mês)
+                            # Adiciona o aporte mensal
+                            total_amount += contributions_monthly
+
+                            # No segundo mês, salva o montante acumulado
                             if i == 1:
                                 second_month_money = total_amount
+                            print(second_month_money)
 
                         # Calcula o total gasto ao longo dos anos
-                        spent_total_per_years = total_amount / (spent_monthly * monthlys_per_year)
+                        spent_total_per_years = (total_amount / spent_monthly) / 12
 
                     except TypeError:
                         flash("Erro: Tipo de dado incorreto encontrado durante o cálculo.", category='error')
@@ -192,9 +195,9 @@ class Simulate():
 
 
                     result = {
-                        'second_month_money': second_month_money,
-                        'total_amount': total_amount,
-                        'spent_total_per_years': spent_total_per_years
+                            'second_month_money': round(second_month_money),
+                            'total_amount': round(total_amount),
+                            'spent_total_per_years': round(spent_total_per_years)
                     }
                     print(f"REsult com BAnk VGBL{result}")
                     return result
@@ -222,38 +225,33 @@ class Simulate():
                 bank_application_mapping = {
                     'fixed_income': (12 / 100) / 12, 
                     'variable_income': (13 / 100) / 12, 
-                    'multi_market': (14 / 100) / 12, 
-                    'tax_administrative': (0.99 / 100) 
+                    'multi_market': (14 / 100) / 12
                 }
 
                 # Conforme a opção selecionada pelo usuário na application_type, eu pesquiso no dicionario o primeiro valor igual 
                 selected_application_type = bank_application_mapping.get(application_type, 0)
-                # Como se trata de uma simulação com a opção Banco ativa, eu pego o valor do dicionário da taxa administrativa
-                tax_administrative = bank_application_mapping['tax_administrative']
 
                 try:
                     # Inicializa o primeiro mês do montante
-                    total_amount = initial_application + contributions_monthly
+                    print(selected_application_type)
+                    # Inicializa o primeiro mês do montante com a aplicação inicial
+                    total_amount = initial_application 
+                    print(total_amount)
 
-                    # Aplica o rendimento do primeiro mês antes de entrar no loop
-                    total_amount += total_amount * selected_application_type  # Aplica os juros do primeiro mês
-                    total_amount -= total_amount * tax_administrative  # Aplica a taxa administrativa do primeiro mês
-
-                    # Loop para calcular o montante ao longo dos meses com aportes mensais e juros
-                    for i in range(1, quantity_months):  # Começa a partir do segundo mês
-                        # Adiciona o aporte mensal (a partir do segundo mês)
-                        total_amount += contributions_monthly
-                        # Aplica os juros sobre o montante acumulado
+                    # Loop para calcular o montante ao longo dos meses
+                    for i in range(1, quantity_months + 1):
+                        # Aplica os juros do mês
                         total_amount += total_amount * selected_application_type
-                        # Aplica a taxa administrativa sobre o montante acumulado
-                        total_amount -= total_amount * tax_administrative
+                        # Adiciona o aporte mensal
+                        total_amount += contributions_monthly
 
-                        # No segundo mês, retorna o montante acumulado (com rendimento do primeiro mês)
+                        # No segundo mês, salva o montante acumulado
                         if i == 1:
                             second_month_money = total_amount
+                    print(second_month_money)
 
                     # Calcula o total gasto ao longo dos anos
-                    spent_total_per_years = total_amount / (spent_monthly * monthlys_per_year)
+                    spent_total_per_years = (total_amount / spent_monthly) / 12
 
                 except TypeError:
                     flash("Erro: Tipo de dado incorreto encontrado durante o cálculo.", category='error')
@@ -262,9 +260,9 @@ class Simulate():
 
 
                 result = {
-                    'second_month_money': second_month_money,
-                    'total_amount': total_amount,
-                    'spent_total_per_years': spent_total_per_years
+                    'second_month_money': round(second_month_money),
+                    'total_amount': round(total_amount),
+                    'spent_total_per_years': round(spent_total_per_years)
                 }
                 print(f"REsult sem BAnk{result}")
                 return result
