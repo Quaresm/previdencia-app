@@ -9,30 +9,30 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
-<!-- Popup Modal -->
-<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="popupModalLabel">Confirmação de Simulação</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+{% if content %}
+{% else %}
+    <!-- Popup Modal -->
+    <div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="popupModalLabel">Confirmação de Simulação</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            Irá prosseguir com a simulação com as taxas médias dos bancos e taxa administrativa,<br> ou com taxas médias e sem taxa administrativa?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-choose1" id="withBank" onclick="submitChoice(true)">Com taxas de banco</button>
+                <br>
+                <button type="button" class="btn-choose2" id="withoutBank" onclick="submitChoice(false)">Sem taxa Adminis.</button>
+            </div>
         </div>
-        <div class="modal-body">
-          Irá prosseguir com a simulação com as taxas de banco, ou por conta própria?
         </div>
-        <div class="modal-footer">
-          <form id="confirmationForm" method="POST" action="/simulate_pvd">
-              <input type="hidden" name="validate_bank" id="validate_bank" value="">
-              <button type="button" class="btn btn-primary" id="withBank" onclick="submitChoice(true)">Com taxas de banco</button>
-              <button type="button" class="btn btn-secondary" id="withoutBank" onclick="submitChoice(false)">Por conta própria</button>
-          </form>
-        </div>
-      </div>
-    </div>
   </div>
-  
+{% endif %}
 <section class="container">
     <div class="row">
         <h1 class="col title" >Simulação da previdência privada</h1>
@@ -58,11 +58,11 @@
                     </div>
                     <div class="form-group">
                         <label for="date_retireday">Quando pretende se aposentar:</label>
-                        <input type="date" class="form-control" placeholder="Digite o ano ex: 2060" name="date_retireday" id="date_retireday" value="{{ content.date_retireday }}" required>
+                        <input type="number" class="form-control" placeholder="Digite o ano ex: 2060" name="date_retireday" id="date_retireday" value="{{ content.date_retireday }}" required>
                     </div>
                     <div class="form-group">
                         <label for="spent_monthly">Gasto Mensal após aposentadoria:</label>
-                        <input type="number" class="form-control" name="spent_monthly" id="spent_monthly" value="{{ content.spent_monthly }}" step="1" required>
+                        <input type="number" class="form-control"  placeholder="Digite o gasto mensal ex: 3000" name="spent_monthly" id="spent_monthly" value="{{ content.spent_monthly }}" step="1" required>
                     </div>
                     <div class="form-group">
                         <label for="application_type">Tipo de aplicação</label>
@@ -73,14 +73,16 @@
                             <option value="multi_market" {% if content.application_type == 'multi_market' %}selected{% endif %}>Multimercado</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="method_type">Método desejável</label>
-                        <select class="form-control" name="method_type" id="method_type" required>
-                            <option value="" selected disabled></option>
-                            <option value="method_pgbl" {% if content.method_type == 'method_pgbl' %}selected{% endif %}>Método PGBL</option>
-                            <option value="method_vgbl" {% if content.method_type == 'method_vgbl' %}selected{% endif %}>Método VGBL</option>
-                        </select>
-                    </div>
+                    {% if request.args.get('validate_bank') != 'False' %}
+                        <div class="form-group">
+                            <label for="method_type">Método desejável</label>
+                            <select class="form-control" name="method_type" id="method_type" required>
+                                <option value="" selected disabled></option>
+                                <option value="method_pgbl" {% if content.method_type == 'method_pgbl' %}selected{% endif %}>Método PGBL</option>
+                                <option value="method_vgbl" {% if content.method_type == 'method_vgbl' %}selected{% endif %}>Método VGBL</option>
+                            </select>
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <button type="submit" class="btn">Calcular</button>
                     </div>
@@ -117,14 +119,16 @@
                         <option value="multi_market">Multimercado</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="application_type">Método desejavél</label>
-                    <select class="form-control" name="method_type" id="method_type" required>
-                        <option value="" selected disabled></option>
-                        <option value="method_pgbl">Método PGBL</option>
-                        <option value="method_vgbl">Método VGBL</option>
-                    </select>
-                </div>
+                {% if request.args.get('validate_bank') != 'False' %}
+                    <div class="form-group">
+                        <label for="application_type">Método desejavél</label>
+                        <select class="form-control" name="method_type" id="method_type" required>
+                            <option value="" selected disabled></option>
+                            <option value="method_pgbl">Método PGBL</option>
+                            <option value="method_vgbl">Método VGBL</option>
+                        </select>
+                    </div>
+                {% endif %}
                 <div class="form-group">
                     <button type="submit" class="btn">Calcular</button>
                 </div>
@@ -168,10 +172,19 @@
             responsive: false
         }
     });
-    // Mostrar o popup ao carregar a página
     $(document).ready(function() {
         $('#popupModal').modal('show');
     });
+
+    // Função para gerenciar a escolha, alterar a URL e fechar o modal
+    function submitChoice(validateBank) {
+        // Define a nova URL sem recarregar a página
+        const newUrl = '/simulate_pvd?validate_bank=' + (validateBank ? 'True' : 'False');
+        window.history.pushState({ path: newUrl }, '', newUrl);
+
+        // Fecha o modal
+        $('#popupModal').modal('hide');
+    }
 
     // Bloquear entrada de números decimais nos campos de entrada
     var inputs = document.querySelectorAll('input[type="number"]');
@@ -181,25 +194,6 @@
         });
     });
 
-    var ctx = document.getElementById("lineChart").getContext("2d");
-    var lineChart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: [], // Inicialmente vazio
-            datasets: [
-                {
-                    label: "Data points",
-                    data: [], // Inicialmente vazio
-                    fill: false,
-                    borderColor: "rgb(75, 192, 192)",
-                    lineTension: 0.1
-                }
-            ]
-        },
-        options: {
-            responsive: false
-        }
-    });
 </script>
 
 {% endblock %}

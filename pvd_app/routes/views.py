@@ -153,11 +153,14 @@ def pre_simulation():
                 'spent_monthly': float(request.form.get('spent_monthly')),
                 'application_type': request.form.get('application_type'),
                 'method_type': request.form.get('method_type'),
+                'validate_bank' : request.args.get('validate_bank', default="False")  # Captura o parâmetro da URL
             }
+
+            print(content['validate_bank'])
 
             # Verifica se o método de previdência está correto
             if content['method_type'] not in ['method_pgbl', 'method_vgbl']:
-                raise ValueError("Método de previdência inválido")
+                flash("Método de previdência inválido", category='error')
             
             # Registra no banco a pesquisa feita
             # register_result = results.register_results(
@@ -172,8 +175,8 @@ def pre_simulation():
             
             # print( register_result )
             
-            # Executa a simulação
-            response = class_simulate.simulate_recipe_bank(
+            #Executa a simulação
+            response = class_simulate.simulate_recipe(
                 content['brute_income'],
                 content['initial_application'],
                 content['contributions_monthly'],

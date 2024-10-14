@@ -27,15 +27,32 @@
     color:black;
 }
 
-.btn-choose {
-    border-radius: 20%;
+.btn-choose1 {
+    padding: 3px;
+    border-radius: 10%;
     background: #7A62E3;
     color: #FFFF;
     font-size: 20px;
     animation: fadeIn 1.5s;
 }
 
-.btn-choose:hover {
+.btn-choose1:hover {
+    padding: 3px;
+    background-color: seagreen;
+    color:white;
+}
+
+.btn-choose2 {
+    padding: 3px;
+    border-radius: 10%;
+    background: #0056b3;
+    color: #FFFF;
+    font-size: 20px;
+    animation: fadeIn 1.5s;
+}
+
+.btn-choose2:hover {
+    padding: 3px;
     background-color: seagreen;
     color:white;
 }
@@ -65,4 +82,5 @@
 .modal-footer{
     display:flex;
     justify-content: center;
+    
 }
