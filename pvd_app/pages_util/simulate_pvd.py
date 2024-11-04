@@ -230,13 +230,14 @@ class Simulate():
 
                 # Conforme a opção selecionada pelo usuário na application_type, eu pesquiso no dicionario o primeiro valor igual 
                 selected_application_type = bank_application_mapping.get(application_type, 0)
-
+                spent_total_per_years = 0 
+                
                 try:
-                    # Inicializa o primeiro mês do montante
-                    print(selected_application_type)
                     # Inicializa o primeiro mês do montante com a aplicação inicial
                     total_amount = initial_application 
-                    print(total_amount)
+
+                    yearly_values = []
+                    time_in_years = []
 
                     # Loop para calcular o montante ao longo dos meses
                     for i in range(1, quantity_months + 1):
@@ -245,13 +246,22 @@ class Simulate():
                         # Adiciona o aporte mensal
                         total_amount += contributions_monthly
 
+                        # Salva o montante acumulado no ano atual na lista
+                        if i % 12 == 0:
+                            yearly_values.append(round(total_amount))
+
+                        # Adiciona o ano à lista apenas ao final de cada 12 meses
+                        if i % 12 == 0:
+                            time_in_years.append(i // 12)
+                        elif i == quantity_months:  # Caso de fechamento para o último mês, se não fechar um ano exato
+                            time_in_years.append((i - 1) // 12 + 1)
+
                         # No segundo mês, salva o montante acumulado
                         if i == 1:
                             second_month_money = total_amount
-                    print(second_month_money)
 
                     # Calcula o total gasto ao longo dos anos
-                    spent_total_per_years = (total_amount / spent_monthly) / 12
+                    spent_total_per_years = (total_amount / spent_monthly) * 12
 
                 except TypeError:
                     flash("Erro: Tipo de dado incorreto encontrado durante o cálculo.", category='error')
@@ -262,7 +272,9 @@ class Simulate():
                 result = {
                     'second_month_money': round(second_month_money),
                     'total_amount': round(total_amount),
-                    'spent_total_per_years': round(spent_total_per_years)
+                    'spent_total_per_years': round(spent_total_per_years),
+                    'yearly_values':yearly_values,
+                    'time_in_years':time_in_years
                 }
                 print(f"REsult sem BAnk{result}")
                 return result

@@ -151,11 +151,11 @@
     var lineChart = new Chart(ctx, {
         type: "line",
         data: {
-            labels: [], // Inicialmente vazio
+            labels: {{ labels|tojson }}, // Usa o filtro tojson para passar as labels do Flask
             datasets: [
                 {
-                    label: "Data points",
-                    data: [], // Inicialmente vazio
+                    label: "Montante Acumulado por Ano",
+                    data: {{ values|tojson }}, // Usa o filtro tojson para passar os values do Flask
                     fill: false,
                     borderColor: "rgb(75, 192, 192)",
                     lineTension: 0.1
@@ -163,15 +163,19 @@
             ]
         },
         options: {
-            responsive: false
+            responsive: false,
+            scales: {
+                y: {
+                    beginAtZero: true // Garante que o eixo Y comece em 0
+                }
+            }
         }
     });
+
     $(document).ready(function() {
         $('#popupModal').modal('show');
     });
-
 </script>
-
 <script type="text/javascript">
     // Função que altera o estilo de acordo com o valor de validate_bank na URL
     function toggleMethodSelect() {

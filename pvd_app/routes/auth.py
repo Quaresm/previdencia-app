@@ -25,7 +25,6 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
-                print(current_user)
                 return redirect('/home')
             else:
                 flash('Senha incorreta, tente novamente.', category='error')

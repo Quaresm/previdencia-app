@@ -129,17 +129,9 @@ def reset_password_with_token(token):
 def pre_simulation():
     class_simulate = Simulate()
 
-    data = [
-        ("01-01-2024", 1234),
-        ("02-01-2024", 1334),
-        ("03-01-2024", 1234),
-        ("04-01-2024", 1434),
-        ("05-01-2024", 1534),
-        ("06-01-2024", 1314),
-    ]
-
-    labels = [row[0] for row in data]
-    values = [row[1] for row in data]
+    # Inicializando labels e values como vazios
+    labels = []
+    values = []
 
     # Captura o parâmetro da URL
     # Verifica se é uma requisição POST
@@ -184,6 +176,15 @@ def pre_simulation():
             
             # Adiciona os resultados à variável content
             content.update(response)
+
+            print(response)
+
+             # Atualiza labels e values para o gráfico
+            labels = response.get('yearly_labels', [])
+            values = response.get('yearly_values', [])
+
+            print(labels)
+            print(values)
 
             return render_template('pages/simulate_pvd.html', labels=labels, values=values, content=content)
 
